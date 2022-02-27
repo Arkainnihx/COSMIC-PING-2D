@@ -1,0 +1,37 @@
+COSMIC PING 2D: Game Design & Planning Document
+
+Game Outline:
+  "Pong in space"
+  "Pong with orbital gravity"
+
+Dev Plan:
+  Create prefabs
+    Paddle
+      Which player's paddle?
+      Move up and down
+    Energy Orb
+      Gravity
+      Combine on collision
+  Set up basic game
+    Instantiate two paddles and an orb in the middle
+    Orbs bounce off paddles
+    Game edges open or closed? Will orbs bounce off non-paddle sides?
+    Orbs are destroyed past paddles
+  Shooting orbs from paddles
+  Health system
+  End-of-game screen
+  Lighting
+    Orbs as main light sources
+    Bigger is brighter
+    Colours?
+  Main menu
+Stretch Goals:
+  Pause menu
+  Sound
+    Orbs make (procedural) sound based on mass and velocity
+    Orb colliding with paddle (and edge) sound
+    Orb collision combination sound?
+  A selection of different playing fields, with static obstacles
+  Powerups/Modifiers? If powerups benefit one player, do we need orb "ownership"? Defined by current orb colour. Orb colour changes to same colour as player when it bounces off their paddle.
+  Settings menu
+  4-player mode
