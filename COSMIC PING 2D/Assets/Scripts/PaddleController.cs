@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PaddleController : MonoBehaviour
 {
+    public int playerID;
+
     // Start is called before the first frame update
     void Start()
     {
