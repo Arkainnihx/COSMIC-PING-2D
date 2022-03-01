@@ -12,19 +12,25 @@ public class PlayingFieldController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // Set up two-player game
         if (totalPlayers == 2)
         {
             paddleArray = new GameObject[2];
             paddleArray[0] = Instantiate(paddlePrefab, new Vector3(15, 0), Quaternion.Euler(0, -90f, 0));
             paddleArray[0].GetComponent<PaddleController>().playerID = 1;
             paddleArray[1] = Instantiate(paddlePrefab, new Vector3(-15, 0), Quaternion.Euler(180, -90f, 0));
-            paddleArray[0].GetComponent<PaddleController>().playerID = 2;
+            paddleArray[1].GetComponent<PaddleController>().playerID = 2;
         }
         Instantiate(orbPrefab, Vector3.zero, Quaternion.identity);
     }
 
     // Update is called once per frame
     void Update()
+    {
+        
+    }
+
+    private void OnTriggerExit(Collider other)
     {
         
     }

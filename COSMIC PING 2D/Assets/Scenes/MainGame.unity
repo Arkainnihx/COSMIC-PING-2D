@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_LightingSettings: {fileID: 0}
+  m_LightingSettings: {fileID: 4890085278179872738, guid: 92517284814e02340abd20e7d209f4a3, type: 2}
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -182,7 +182,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   paddlePrefab: {fileID: 4040702416777940827, guid: f069e0d64adb8f94e8c231588051409b, type: 3}
   orbPrefab: {fileID: 5246412254300636939, guid: 99ae4d42e35a86648811d106f2288143, type: 3}
-  playerCount: 2
+  totalPlayers: 2
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
