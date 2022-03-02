@@ -11,6 +11,7 @@ Dev Plan:
       Move up and down
     Energy Orb
       Gravity
+      Dynamic scaling of volume and mass
       Combine on collision
   Set up basic game
     Instantiate two paddles and an orb in the middle

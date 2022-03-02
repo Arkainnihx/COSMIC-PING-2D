@@ -16,6 +16,7 @@ public class PaddleController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Controls movement based on player ID
         switch (playerID)
         {
             case 1:
@@ -25,6 +26,7 @@ public class PaddleController : MonoBehaviour
                 transform.Translate(new Vector3(0, Input.GetAxisRaw("P2 Move") * movementSpeed));
                 break;
         }
+        // Keeps paddles within play area
         transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, -10, 10));
     }
 }
