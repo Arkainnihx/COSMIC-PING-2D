@@ -9,6 +9,7 @@ Dev Plan:
     Paddle
       Which player's paddle?
       Move up and down
+      Paddles stop at edge of playing field
     Energy Orb
       Gravity
       Dynamic scaling of volume and mass

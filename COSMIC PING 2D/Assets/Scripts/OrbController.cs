@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class OrbController : MonoBehaviour
 {
+
     public float volumeCoefficient = 1f;
 
     // Start is called before the first frame update
@@ -23,7 +24,8 @@ public class OrbController : MonoBehaviour
         switch (collision.gameObject.tag)
         {
             case "Orb":
-
+                // NOT WORKING YET. Orbs just delete each other. Need to think of way round this.
+                GetComponentInParent<PlayingFieldController>().CombineOrbs(gameObject, collision.gameObject);
                 break;
             case "Player":
 

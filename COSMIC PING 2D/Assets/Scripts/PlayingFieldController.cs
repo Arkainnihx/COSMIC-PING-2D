@@ -7,7 +7,7 @@ public class PlayingFieldController : MonoBehaviour
     public GameObject paddlePrefab;
     public GameObject orbPrefab;
     public int totalPlayers = 2;
-    public float gravityCoefficient = 10f;
+    public float gravityCoefficient;
 
     private GameObject[] paddleArray;
     private List<GameObject> orbList;
@@ -15,11 +15,11 @@ public class PlayingFieldController : MonoBehaviour
     void Start()
     {
         orbList = new List<GameObject>();
-        if (totalPlayers == 2)
-        {
-            SetUpTwoPlayerGame();
-        }
-        //SetUpOrbGravityTest();
+        //if (totalPlayers == 2)
+        //{
+        //    SetUpTwoPlayerGame();
+        //}
+        SetUpOrbGravityTest();
     }
 
     void SetUpTwoPlayerGame()
@@ -35,14 +35,20 @@ public class PlayingFieldController : MonoBehaviour
     }
     void SetUpOrbGravityTest()
     {
-        CreateOrb(Random.Range(0.01f, 2f), new Vector3(6, 6), Random.insideUnitCircle);
-        CreateOrb(Random.Range(0.01f, 2f), new Vector3(6, -6), Random.insideUnitCircle);
-        CreateOrb(Random.Range(0.01f, 2f), new Vector3(-6, 6), Random.insideUnitCircle);
-        CreateOrb(Random.Range(0.01f, 2f), new Vector3(-6, -6), Random.insideUnitCircle);
+        float orbDistance = 5f;
+        CreateOrb(Random.Range(0.01f, 2f), new Vector3(orbDistance, orbDistance), Random.insideUnitCircle);
+        CreateOrb(Random.Range(0.01f, 2f), new Vector3(orbDistance, -orbDistance), Random.insideUnitCircle);
+        CreateOrb(Random.Range(0.01f, 2f), new Vector3(-orbDistance, orbDistance), Random.insideUnitCircle);
+        CreateOrb(Random.Range(0.01f, 2f), new Vector3(-orbDistance, -orbDistance), Random.insideUnitCircle);
     }
 
     // Update is called once per frame
     void Update()
+    {
+
+    }
+
+    private void FixedUpdate()
     {
         if (orbList.Count > 1)
         {
@@ -66,7 +72,7 @@ public class PlayingFieldController : MonoBehaviour
 
     void CreateOrb(float mass, Vector3 position, Vector3 velocity)
     {
-        GameObject orb = Instantiate(orbPrefab, position, Quaternion.identity);
+        GameObject orb = Instantiate(orbPrefab, position, Quaternion.identity, transform);
         orb.GetComponent<OrbController>().SetScaleAndMassUsingMass(mass);
         orb.GetComponent<Rigidbody>().velocity = velocity;
         orbList.Add(orb);
@@ -81,6 +87,17 @@ public class PlayingFieldController : MonoBehaviour
     void CreateOrb(float mass)
     {
         CreateOrb(mass, Vector3.zero);
+    }
+
+    // NOT WORKING YET. Orbs just delete each other. Need to think of way round this.
+    public void CombineOrbs(GameObject orb1, GameObject orb2)
+    {
+        // TODO: figure out better new velocity calculation
+        Vector3 newVelocity = orb1.GetComponent<Rigidbody>().velocity + orb2.GetComponent<Rigidbody>().velocity;
+        orb1.GetComponent<Rigidbody>().mass += orb2.GetComponent<Rigidbody>().mass;
+        orb1.GetComponent<Rigidbody>().velocity = newVelocity;
+        orbList.Remove(orb2);
+        Destroy(orb2);
     }
 
     private void OnTriggerExit(Collider other)
