@@ -17,12 +17,12 @@ public class PlayingFieldController : MonoBehaviour
     {
         orbList = new List<GameObject>();
         orbCollsionList = new List<(GameObject, GameObject)>();
-        //if (totalPlayers == 2)
-        //{
-        //    SetUpTwoPlayerGame();
-        //}
+        if (totalPlayers == 2)
+        {
+            SetUpTwoPlayerGame();
+        }
         //SetUpOrbGravityTest();
-        RunNewOrbGravityTest();
+        //RunNewOrbGravityTest();
     }
 
     void SetUpTwoPlayerGame()
@@ -34,7 +34,7 @@ public class PlayingFieldController : MonoBehaviour
         paddleArray[1] = Instantiate(paddlePrefab, new Vector3(-15f, 0f), Quaternion.Euler(180f, -90f, 0f));
         paddleArray[1].GetComponent<PaddleController>().playerID = 2;
         // Create initial energy orb
-        CreateOrb(0.5f, Vector3.zero, 5 * Random.insideUnitCircle);
+        CreateOrb(1f, Vector3.zero, 5 * Vector3.right);
     }
     void SetUpOrbGravityTest()
     {
@@ -70,7 +70,11 @@ public class PlayingFieldController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if (Input.GetKeyUp(KeyCode.B))
+        {
+            bool value = transform.Find("Barriers").gameObject.activeInHierarchy;
+            transform.Find("Barriers").gameObject.SetActive(!value);
+        }
     }
 
     private void FixedUpdate()
@@ -152,6 +156,10 @@ public class PlayingFieldController : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        
+        if (other.gameObject.tag == "Orb")
+        {
+            orbList.Remove(other.gameObject);
+            Destroy(other.gameObject);
+        }
     }
 }

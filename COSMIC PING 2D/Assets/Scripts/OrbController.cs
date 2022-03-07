@@ -5,7 +5,11 @@ using UnityEngine;
 public class OrbController : MonoBehaviour
 {
 
-    public float volumeCoefficient = 1f;
+    public float volumeCoefficient;
+    public float bounceCoefficient;
+
+    private Vector3 bounceDirection;
+    private bool bounceToResolve = false;
 
     // Start is called before the first frame update
     void Start()
@@ -19,6 +23,16 @@ public class OrbController : MonoBehaviour
         
     }
 
+    private void FixedUpdate()
+    {
+        if (bounceToResolve)
+        {
+            float speed = GetComponent<Rigidbody>().velocity.magnitude;
+            GetComponent<Rigidbody>().velocity = speed * bounceDirection;
+            bounceToResolve = false;
+        }
+    }
+
     void OnCollisionEnter(Collision collision)
     {
         switch (collision.gameObject.tag)
@@ -27,7 +41,8 @@ public class OrbController : MonoBehaviour
                 GetComponentInParent<PlayingFieldController>().HandleHalfAnOrbCollision(gameObject, collision.gameObject);
                 break;
             case "Player":
-
+                bounceDirection = Vector3.Normalize(transform.position - collision.transform.Find("BounceAnglePoint").position);
+                bounceToResolve = true;
                 break;
         }
     }

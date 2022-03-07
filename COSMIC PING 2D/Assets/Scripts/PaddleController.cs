@@ -20,10 +20,10 @@ public class PaddleController : MonoBehaviour
         switch (playerID)
         {
             case 1:
-                transform.Translate(new Vector3(0, Input.GetAxisRaw("P1 Move") * movementSpeed));
+                transform.Translate(new Vector3(0, Input.GetAxis("P1 Move") * movementSpeed));
                 break;
             case 2:
-                transform.Translate(new Vector3(0, Input.GetAxisRaw("P2 Move") * movementSpeed));
+                transform.Translate(new Vector3(0, Input.GetAxis("P2 Move") * movementSpeed));
                 break;
         }
         // Keeps paddles within play area

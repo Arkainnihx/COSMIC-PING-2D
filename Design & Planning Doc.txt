@@ -15,10 +15,10 @@ Dev Plan:
       Dynamic scaling of volume and mass - DONE
       Combine on collision - DONE
   Set up basic game
-    Instantiate two paddles and an orb in the middle
-    Orbs bounce off paddles
-    Game edges open or closed? Will orbs bounce off non-paddle sides?
-    Orbs are destroyed past paddles
+    Instantiate two paddles and an orb in the middle - DONE
+    Orbs bounce off paddles - DONE
+    Closed sides; orbs bounce off; toggle - DONE
+    Orbs are destroyed past paddles - DONE
   Shooting orbs from paddles
   Health system
   End-of-game screen
