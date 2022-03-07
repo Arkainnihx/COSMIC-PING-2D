@@ -6,14 +6,14 @@ Game Outline:
 
 Dev Plan:
   Create prefabs
-    Paddle
-      Which player's paddle?
-      Move up and down
-      Paddles stop at edge of playing field
-    Energy Orb
-      Gravity
-      Dynamic scaling of volume and mass
-      Combine on collision
+    Paddle - DONE
+      Which player's paddle? - DONE
+      Move up and down - DONE
+      Paddles stop at edge of playing field - DONE
+    Energy Orb - DONE
+      Gravity - DONE
+      Dynamic scaling of volume and mass - DONE
+      Combine on collision - DONE
   Set up basic game
     Instantiate two paddles and an orb in the middle
     Orbs bounce off paddles

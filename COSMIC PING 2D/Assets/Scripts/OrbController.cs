@@ -24,8 +24,7 @@ public class OrbController : MonoBehaviour
         switch (collision.gameObject.tag)
         {
             case "Orb":
-                // NOT WORKING YET. Orbs just delete each other. Need to think of way round this.
-                GetComponentInParent<PlayingFieldController>().CombineOrbs(gameObject, collision.gameObject);
+                GetComponentInParent<PlayingFieldController>().HandleHalfAnOrbCollision(gameObject, collision.gameObject);
                 break;
             case "Player":
 

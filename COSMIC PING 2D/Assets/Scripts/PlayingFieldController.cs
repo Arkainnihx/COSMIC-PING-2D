@@ -11,15 +11,18 @@ public class PlayingFieldController : MonoBehaviour
 
     private GameObject[] paddleArray;
     private List<GameObject> orbList;
+    private List<(GameObject, GameObject)> orbCollsionList;
     // Start is called before the first frame update
     void Start()
     {
         orbList = new List<GameObject>();
+        orbCollsionList = new List<(GameObject, GameObject)>();
         //if (totalPlayers == 2)
         //{
         //    SetUpTwoPlayerGame();
         //}
-        SetUpOrbGravityTest();
+        //SetUpOrbGravityTest();
+        RunNewOrbGravityTest();
     }
 
     void SetUpTwoPlayerGame()
@@ -40,6 +43,28 @@ public class PlayingFieldController : MonoBehaviour
         CreateOrb(Random.Range(0.01f, 2f), new Vector3(orbDistance, -orbDistance), Random.insideUnitCircle);
         CreateOrb(Random.Range(0.01f, 2f), new Vector3(-orbDistance, orbDistance), Random.insideUnitCircle);
         CreateOrb(Random.Range(0.01f, 2f), new Vector3(-orbDistance, -orbDistance), Random.insideUnitCircle);
+    }
+
+    void RunNewOrbGravityTest()
+    {
+        float positionRange = 8f;
+        float velocityCoefficient = 4f;
+        float maxMass = 0.5f;
+        StartCoroutine(CreateRandomTestOrbs(positionRange, velocityCoefficient, maxMass));
+    }
+
+    IEnumerator CreateRandomTestOrbs(float positionRange, float velocityCoefficient, float maxMass)
+    {
+        float nextActionTime = 0.25f;
+        while (Time.time < 120f)
+        {
+            if (Time.time > nextActionTime)
+            {
+                nextActionTime += 0.5f;
+                CreateOrb(Random.Range(0.01f, maxMass), positionRange * Random.insideUnitCircle, velocityCoefficient * Random.insideUnitCircle);
+            }
+            yield return null;
+        }
     }
 
     // Update is called once per frame
@@ -64,7 +89,11 @@ public class PlayingFieldController : MonoBehaviour
             foreach (GameObject otherOrb in orbList)
             {
                 if (otherOrb == orbToApplyForceTo) continue;
-                forceToApply += (gravityCoefficient * orbToApplyForceTo.GetComponent<Rigidbody>().mass * otherOrb.GetComponent<Rigidbody>().mass * (otherOrb.transform.position - orbToApplyForceTo.transform.position)) / Mathf.Pow(Vector3.Distance(otherOrb.transform.position, orbToApplyForceTo.transform.position), 3);
+                Rigidbody rb1 = orbToApplyForceTo.GetComponent<Rigidbody>();
+                Rigidbody rb2 = otherOrb.GetComponent<Rigidbody>();
+                Vector3 position1 = orbToApplyForceTo.transform.position;
+                Vector3 position2 = otherOrb.transform.position;
+                forceToApply += (gravityCoefficient * rb1.mass * rb2.mass * (position2 - position1)) / Mathf.Pow(Vector3.Distance(position2, position1), 3);
             }
             orbToApplyForceTo.GetComponent<Rigidbody>().AddForce(forceToApply);
         }
@@ -89,13 +118,34 @@ public class PlayingFieldController : MonoBehaviour
         CreateOrb(mass, Vector3.zero);
     }
 
-    // NOT WORKING YET. Orbs just delete each other. Need to think of way round this.
-    public void CombineOrbs(GameObject orb1, GameObject orb2)
+    public void HandleHalfAnOrbCollision(GameObject thisOrb, GameObject thatOrb)
     {
-        // TODO: figure out better new velocity calculation
-        Vector3 newVelocity = orb1.GetComponent<Rigidbody>().velocity + orb2.GetComponent<Rigidbody>().velocity;
-        orb1.GetComponent<Rigidbody>().mass += orb2.GetComponent<Rigidbody>().mass;
-        orb1.GetComponent<Rigidbody>().velocity = newVelocity;
+        // If there's an unresolved collision on the list, try to resolve it with this new collision, else add this unresolved collision to the list
+        if (orbCollsionList.Count % 2 == 1)
+        {
+            foreach ((GameObject thisOrb, GameObject thatOrb) orbCollision in orbCollsionList)
+            {
+                if (thisOrb == orbCollision.thatOrb && thatOrb == orbCollision.thisOrb)
+                {
+                    orbCollsionList.Remove(orbCollision);
+                    CombineOrbs(thisOrb, thatOrb);
+                }
+            }
+        } else
+        {
+            orbCollsionList.Add((thisOrb, thatOrb));
+        }
+    }
+
+    void CombineOrbs(GameObject orb1, GameObject orb2)
+    {
+        Rigidbody rb1 = orb1.GetComponent<Rigidbody>();
+        Rigidbody rb2 = orb2.GetComponent<Rigidbody>();
+        float newMass = rb1.mass + rb2.mass;
+        Vector3 momentum = rb1.mass * rb1.velocity + rb2.mass * rb2.velocity;
+        Vector3 newVelocity = momentum / newMass;
+        orb1.GetComponent<OrbController>().SetScaleAndMassUsingMass(newMass);
+        rb1.velocity = newVelocity;
         orbList.Remove(orb2);
         Destroy(orb2);
     }
