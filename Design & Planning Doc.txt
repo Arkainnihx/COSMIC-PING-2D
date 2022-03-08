@@ -14,20 +14,34 @@ Dev Plan:
       Gravity - DONE
       Dynamic scaling of volume and mass - DONE
       Combine on collision - DONE
-  Set up basic game - DONE
+      Explode at a critical mass?
+      Orb ownership?
+  Set up basic game - IN PROGRESS
     Instantiate two paddles and an orb in the middle - DONE
     Orbs bounce off paddles - DONE
     Closed sides; orbs bounce off; toggle - DONE
     Orbs are destroyed past paddles - DONE
     Shooting orbs from paddles - IN PROGRESS
+      Basic functionality - DONE
+      Force scales with mass - DONE
+      BUG: paddle cannot shoot if charging orb is deleted before releasing the charge - FIXED
+      Variable cooldown between shots - IN PROGRESS
+        Code implementation - DONE
+        Diegetic light-based UI - CAN'T GET WORKING; RETIRING FOR NOW
     Health system
+      Code implementation
+      UI health bars
     End-of-game screen
   Lighting
     Orbs as main light sources
-    Bigger is brighter
-    Colours?
+    Bigger is brighter - DONE
+    Colour
+      Player colours - DONE
+      Orb colours
+        Change colour as they get bigger?
   Main menu
 Stretch Goals:
+  Code Refactoring
   Pause menu
   Sound
     Orbs make (procedural) sound based on mass and velocity

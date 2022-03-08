@@ -29,10 +29,12 @@ public class PlayingFieldController : MonoBehaviour
     {
         // Create and position two paddles, assign player IDs
         paddleArray = new GameObject[2];
-        paddleArray[0] = Instantiate(paddlePrefab, new Vector3(15f, 0f), Quaternion.Euler(0f, -90f, 0f), transform);
+        paddleArray[0] = Instantiate(paddlePrefab, new Vector3(15f, 0f), Quaternion.Euler(0, -90f, 0f), transform);
         paddleArray[0].GetComponent<PaddleController>().playerID = 1;
+        paddleArray[0].GetComponent<PaddleController>().playerColour = Color.green;
         paddleArray[1] = Instantiate(paddlePrefab, new Vector3(-15f, 0f), Quaternion.Euler(180f, -90f, 0f), transform);
         paddleArray[1].GetComponent<PaddleController>().playerID = 2;
+        paddleArray[1].GetComponent<PaddleController>().playerColour = Color.red;
         // Create initial energy orb
         CreateOrb(1f);
     }
@@ -54,19 +56,19 @@ public class PlayingFieldController : MonoBehaviour
     //    StartCoroutine(CreateRandomTestOrbs(positionRange, velocityCoefficient, maxMass));
     //}
 
-    IEnumerator CreateRandomTestOrbs(float positionRange, float velocityCoefficient, float maxMass)
-    {
-        float nextActionTime = 0.25f;
-        while (Time.time < 120f)
-        {
-            if (Time.time > nextActionTime)
-            {
-                nextActionTime += 0.5f;
-                CreateOrb(Random.Range(0.01f, maxMass), positionRange * Random.insideUnitCircle, velocityCoefficient * Random.insideUnitCircle);
-            }
-            yield return null;
-        }
-    }
+    //IEnumerator CreateRandomTestOrbs(float positionRange, float velocityCoefficient, float maxMass)
+    //{
+    //    float nextActionTime = 0.25f;
+    //    while (Time.time < 120f)
+    //    {
+    //        if (Time.time > nextActionTime)
+    //        {
+    //            nextActionTime += 0.2f;
+    //            CreateOrb(Random.Range(0.01f, maxMass), positionRange * Random.insideUnitCircle, velocityCoefficient * Random.insideUnitCircle);
+    //        }
+    //        yield return null;
+    //    }
+    //}
 
     // Update is called once per frame
     void Update()
@@ -104,23 +106,23 @@ public class PlayingFieldController : MonoBehaviour
         }
     }
 
-    void CreateOrb(float mass, Vector3 position, Vector3 velocity)
+    public GameObject CreateOrb(float mass, Vector3 position, Vector3 velocity)
     {
         GameObject orb = Instantiate(orbPrefab, position, Quaternion.identity, transform);
-        orb.GetComponent<OrbController>().SetScaleAndMassUsingMass(mass);
+        orb.GetComponent<OrbController>().SetProportionalValuesUsingMass(mass);
         orb.GetComponent<Rigidbody>().velocity = velocity;
         orbList.Add(orb);
-
+        return orb;
     }
 
-    void CreateOrb(float mass, Vector3 position)
+    public GameObject CreateOrb(float mass, Vector3 position)
     {
-        CreateOrb(mass, position, Vector3.zero);
+        return CreateOrb(mass, position, Vector3.zero);
     }
 
-    void CreateOrb(float mass)
+    public GameObject CreateOrb(float mass)
     {
-        CreateOrb(mass, Vector3.zero);
+        return CreateOrb(mass, Vector3.zero);
     }
 
     public void HandleHalfAnOrbCollision(GameObject thisOrb, GameObject thatOrb)
@@ -149,7 +151,7 @@ public class PlayingFieldController : MonoBehaviour
         float newMass = rb1.mass + rb2.mass;
         Vector3 momentum = rb1.mass * rb1.velocity + rb2.mass * rb2.velocity;
         Vector3 newVelocity = momentum / newMass;
-        orb1.GetComponent<OrbController>().SetScaleAndMassUsingMass(newMass);
+        orb1.GetComponent<OrbController>().SetProportionalValuesUsingMass(newMass);
         rb1.velocity = newVelocity;
         orbList.Remove(orb2);
         Destroy(orb2);

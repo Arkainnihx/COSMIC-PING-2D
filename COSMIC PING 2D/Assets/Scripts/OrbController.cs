@@ -49,18 +49,15 @@ public class OrbController : MonoBehaviour
 
     public void IncrementMass()
     {
-        SetScaleAndMassUsingMass(gameObject.GetComponent<Rigidbody>().mass + massIncrement);
+        SetProportionalValuesUsingMass(gameObject.GetComponent<Rigidbody>().mass + massIncrement);
     }
 
-    public void SetScaleAndMassUsingScale(float scale)
-    {
-        transform.localScale = volumeCoefficient * scale * Vector3.one;
-        GetComponent<Rigidbody>().mass = Mathf.Pow(scale, 3f);
-    }
-
-    public void SetScaleAndMassUsingMass(float mass)
+    public void SetProportionalValuesUsingMass(float mass)
     {
         GetComponent<Rigidbody>().mass = mass;
         transform.localScale = volumeCoefficient * Mathf.Pow(mass, 1f / 3f) * Vector3.one;
+
+        GetComponentInChildren<Light>().range = 3 + (10 * mass);
+        GetComponentInChildren<Light>().intensity = 1 + (5 * mass);
     }
 }
