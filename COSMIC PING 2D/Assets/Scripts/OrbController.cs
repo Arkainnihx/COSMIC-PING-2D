@@ -6,10 +6,10 @@ public class OrbController : MonoBehaviour
 {
 
     public float volumeCoefficient;
-    public float bounceCoefficient;
 
     private Vector3 bounceDirection;
-    private bool bounceToResolve = false;
+    private bool paddleBounceToResolve = false;
+    private float massIncrement = 0.001f;
 
     // Start is called before the first frame update
     void Start()
@@ -25,11 +25,11 @@ public class OrbController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (bounceToResolve)
+        if (paddleBounceToResolve)
         {
             float speed = GetComponent<Rigidbody>().velocity.magnitude;
             GetComponent<Rigidbody>().velocity = speed * bounceDirection;
-            bounceToResolve = false;
+            paddleBounceToResolve = false;
         }
     }
 
@@ -41,10 +41,15 @@ public class OrbController : MonoBehaviour
                 GetComponentInParent<PlayingFieldController>().HandleHalfAnOrbCollision(gameObject, collision.gameObject);
                 break;
             case "Player":
-                bounceDirection = Vector3.Normalize(transform.position - collision.transform.Find("BounceAnglePoint").position);
-                bounceToResolve = true;
+                bounceDirection = Vector3.Normalize(transform.position - collision.transform.Find("Bounce Angle Point").position);
+                paddleBounceToResolve = true;
                 break;
         }
+    }
+
+    public void IncrementMass()
+    {
+        SetScaleAndMassUsingMass(gameObject.GetComponent<Rigidbody>().mass + massIncrement);
     }
 
     public void SetScaleAndMassUsingScale(float scale)

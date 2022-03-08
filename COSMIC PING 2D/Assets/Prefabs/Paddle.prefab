@@ -204,7 +204,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8713518904691921528}
   m_Layer: 0
-  m_Name: BounceAnglePoint
+  m_Name: Bounce Angle Point
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -269,5 +269,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f2ad49eba74e6d4da8fc88c022e6376, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  orbPrefab: {fileID: 5246412254300636939, guid: 99ae4d42e35a86648811d106f2288143, type: 3}
   playerID: 0
   movementSpeed: 1
+  projectileForceCoefficient: 50
+  projectileMaxMass: 1

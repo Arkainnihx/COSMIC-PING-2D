@@ -14,14 +14,14 @@ Dev Plan:
       Gravity - DONE
       Dynamic scaling of volume and mass - DONE
       Combine on collision - DONE
-  Set up basic game
+  Set up basic game - DONE
     Instantiate two paddles and an orb in the middle - DONE
     Orbs bounce off paddles - DONE
     Closed sides; orbs bounce off; toggle - DONE
     Orbs are destroyed past paddles - DONE
-  Shooting orbs from paddles
-  Health system
-  End-of-game screen
+    Shooting orbs from paddles - IN PROGRESS
+    Health system
+    End-of-game screen
   Lighting
     Orbs as main light sources
     Bigger is brighter

@@ -197,7 +197,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 36, y: 1, z: 1}
+  m_Size: {x: 36, y: 1, z: 10}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &373740327
 GameObject:
@@ -241,7 +241,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 36, y: 1, z: 1}
+  m_Size: {x: 36, y: 1, z: 10}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &906827609
 GameObject:
@@ -368,7 +368,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 36, y: 20, z: 1}
+  m_Size: {x: 36, y: 20, z: 10}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!4 &959724438
 Transform:
@@ -401,6 +401,7 @@ MonoBehaviour:
   orbPrefab: {fileID: 5246412254300636939, guid: 99ae4d42e35a86648811d106f2288143, type: 3}
   totalPlayers: 2
   gravityCoefficient: 10
+  orbList: []
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0

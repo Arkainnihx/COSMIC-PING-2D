@@ -8,9 +8,9 @@ public class PlayingFieldController : MonoBehaviour
     public GameObject orbPrefab;
     public int totalPlayers = 2;
     public float gravityCoefficient;
+    public List<GameObject> orbList;
 
     private GameObject[] paddleArray;
-    private List<GameObject> orbList;
     private List<(GameObject, GameObject)> orbCollsionList;
     // Start is called before the first frame update
     void Start()
@@ -29,29 +29,30 @@ public class PlayingFieldController : MonoBehaviour
     {
         // Create and position two paddles, assign player IDs
         paddleArray = new GameObject[2];
-        paddleArray[0] = Instantiate(paddlePrefab, new Vector3(15f, 0f), Quaternion.Euler(0f, -90f, 0f));
+        paddleArray[0] = Instantiate(paddlePrefab, new Vector3(15f, 0f), Quaternion.Euler(0f, -90f, 0f), transform);
         paddleArray[0].GetComponent<PaddleController>().playerID = 1;
-        paddleArray[1] = Instantiate(paddlePrefab, new Vector3(-15f, 0f), Quaternion.Euler(180f, -90f, 0f));
+        paddleArray[1] = Instantiate(paddlePrefab, new Vector3(-15f, 0f), Quaternion.Euler(180f, -90f, 0f), transform);
         paddleArray[1].GetComponent<PaddleController>().playerID = 2;
         // Create initial energy orb
-        CreateOrb(1f, Vector3.zero, 5 * Vector3.right);
-    }
-    void SetUpOrbGravityTest()
-    {
-        float orbDistance = 5f;
-        CreateOrb(Random.Range(0.01f, 2f), new Vector3(orbDistance, orbDistance), Random.insideUnitCircle);
-        CreateOrb(Random.Range(0.01f, 2f), new Vector3(orbDistance, -orbDistance), Random.insideUnitCircle);
-        CreateOrb(Random.Range(0.01f, 2f), new Vector3(-orbDistance, orbDistance), Random.insideUnitCircle);
-        CreateOrb(Random.Range(0.01f, 2f), new Vector3(-orbDistance, -orbDistance), Random.insideUnitCircle);
+        CreateOrb(1f);
     }
 
-    void RunNewOrbGravityTest()
-    {
-        float positionRange = 8f;
-        float velocityCoefficient = 4f;
-        float maxMass = 0.5f;
-        StartCoroutine(CreateRandomTestOrbs(positionRange, velocityCoefficient, maxMass));
-    }
+    //void SetUpOrbGravityTest()
+    //{
+    //    float orbDistance = 5f;
+    //    CreateOrb(Random.Range(0.01f, 2f), new Vector3(orbDistance, orbDistance), Random.insideUnitCircle);
+    //    CreateOrb(Random.Range(0.01f, 2f), new Vector3(orbDistance, -orbDistance), Random.insideUnitCircle);
+    //    CreateOrb(Random.Range(0.01f, 2f), new Vector3(-orbDistance, orbDistance), Random.insideUnitCircle);
+    //    CreateOrb(Random.Range(0.01f, 2f), new Vector3(-orbDistance, -orbDistance), Random.insideUnitCircle);
+    //}
+
+    //void RunNewOrbGravityTest()
+    //{
+    //    float positionRange = 8f;
+    //    float velocityCoefficient = 4f;
+    //    float maxMass = 0.5f;
+    //    StartCoroutine(CreateRandomTestOrbs(positionRange, velocityCoefficient, maxMass));
+    //}
 
     IEnumerator CreateRandomTestOrbs(float positionRange, float velocityCoefficient, float maxMass)
     {
