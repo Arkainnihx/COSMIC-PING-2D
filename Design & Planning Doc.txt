@@ -14,7 +14,7 @@ Dev Plan:
       Gravity - DONE
       Dynamic scaling of volume and mass - DONE
       Combine on collision - DONE
-      Explode at a critical mass?
+      Explode at a critical mass (10)
       Orb ownership?
   Set up basic game - IN PROGRESS
     Instantiate two paddles and an orb in the middle - DONE
@@ -28,10 +28,10 @@ Dev Plan:
       Variable cooldown between shots - IN PROGRESS
         Code implementation - DONE
         Diegetic light-based UI - CAN'T GET WORKING; RETIRING FOR NOW
-    Health system
-      Code implementation
-      UI health bars
-    End-of-game screen
+    Health system - DONE
+      Code implementation - DONE
+      UI health bars - DONE
+    End-of-game screen - DONE
   Lighting
     Orbs as main light sources
     Bigger is brighter - DONE

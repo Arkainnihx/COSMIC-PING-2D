@@ -459,10 +459,11 @@ MonoBehaviour:
   orbPrefab: {fileID: 5246412254300636939, guid: 99ae4d42e35a86648811d106f2288143, type: 3}
   playerID: 0
   playerColour: {r: 0, g: 0, b: 0, a: 0}
-  movementSpeed: 1
-  projectileForceCoefficient: 60
-  projectileForceMinimum: 10
+  movementSpeed: 0.1
+  projectileForceCoefficient: 70
+  projectileForceMinimum: 6
   projectileMaxMass: 1
+  fullHealth: 10
 --- !u!1 &4119918885480319786
 GameObject:
   m_ObjectHideFlags: 0

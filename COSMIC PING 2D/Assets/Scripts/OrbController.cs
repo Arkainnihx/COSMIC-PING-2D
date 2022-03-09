@@ -11,18 +11,6 @@ public class OrbController : MonoBehaviour
     private bool paddleBounceToResolve = false;
     private float massIncrement = 0.001f;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     private void FixedUpdate()
     {
         if (paddleBounceToResolve)
@@ -38,7 +26,7 @@ public class OrbController : MonoBehaviour
         switch (collision.gameObject.tag)
         {
             case "Orb":
-                GetComponentInParent<PlayingFieldController>().HandleHalfAnOrbCollision(gameObject, collision.gameObject);
+                GetComponentInParent<OrbSimulationController>().HandleHalfAnOrbCollision(gameObject, collision.gameObject);
                 break;
             case "Player":
                 bounceDirection = Vector3.Normalize(transform.position - collision.transform.Find("Bounce Angle Point").position);
@@ -58,6 +46,6 @@ public class OrbController : MonoBehaviour
         transform.localScale = volumeCoefficient * Mathf.Pow(mass, 1f / 3f) * Vector3.one;
 
         GetComponentInChildren<Light>().range = 3 + (10 * mass);
-        GetComponentInChildren<Light>().intensity = 1 + (5 * mass);
+        GetComponentInChildren<Light>().intensity = 1 + (4 * mass);
     }
 }

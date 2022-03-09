@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PaddleController : MonoBehaviour
 {
@@ -11,6 +12,10 @@ public class PaddleController : MonoBehaviour
     public float projectileForceCoefficient;
     public float projectileForceMinimum;
     public float projectileMaxMass;
+    public float fullHealth;
+
+    private GameObject healthBar;
+    private float health;
 
     private GameObject projectileOrb;
     private float projectileOrbFloatRange = 0.7f;
@@ -30,9 +35,10 @@ public class PaddleController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        health = fullHealth;
         movementSpeed = 0.1f;
         lights = lights = transform.GetChild(2).GetComponentsInChildren<Light>();
-        StartCoroutine(SetLights());
+        SetLights();
     }
 
     // Update is called once per frame
@@ -80,38 +86,19 @@ public class PaddleController : MonoBehaviour
         }
     }
 
-    IEnumerator SetLights()
+    public void TakeDamage(float mass, float speed)
     {
-        yield return new WaitForSeconds(0.1f);
-        SetLightsColour(playerColour);
-        //Color.RGBToHSV(playerColour, out playerHue, out playerSaturation, out playerValue);
-
-        //lightsChargeGradient = new Gradient();
-        //GradientColorKey[] colourKeys = new GradientColorKey[6];
-        //GradientAlphaKey[] alphaKeys = new GradientAlphaKey[2];
-        //colourKeys[0].color = Color.white;
-        //colourKeys[0].time = 0f;
-        //colourKeys[1].color = Color.HSVToRGB(playerHue, playerSaturation / 2, playerValue);
-        //colourKeys[1].time = 0.489f;
-        //colourKeys[2].color = playerColour;
-        //colourKeys[2].time = 0/49f;
-        //colourKeys[3].color = Color.white;
-        //colourKeys[3].time = 0.5f;
-        //colourKeys[4].color = Color.HSVToRGB(playerHue, playerSaturation / 2, playerValue);
-        //colourKeys[4].time = 0.989f;
-        //colourKeys[5].color = playerColour;
-        //colourKeys[5].time = 0.99f;
-        //alphaKeys[0].alpha = 1f;
-        //alphaKeys[0].time = 0f;
-        //alphaKeys[1].alpha = 1f;
-        //alphaKeys[1].time = 1f;
-        //lightsChargeGradient.SetKeys(colourKeys, alphaKeys);    
-
+        health -= speed * Mathf.Pow(mass, 2);
+        healthBar.GetComponent<Image>().fillAmount = health / fullHealth;
+        if (health <= 0f)
+        {
+            GetComponentInParent<MatchController>().GameOver(gameObject);
+        }
     }
 
     float CreateProjectileOrb()
     {
-        projectileOrb = GetComponentInParent<PlayingFieldController>().CreateOrb(0f);
+        projectileOrb = GetComponentInParent<OrbSimulationController>().CreateOrb(0f);
         projectileOrb.transform.SetParent(transform);
         projectileOrb.transform.rotation = Quaternion.LookRotation(Vector3.forward, Vector3.up);
         projectileOrb.transform.localPosition = projectileOrbFloatRange * Vector3.forward;
@@ -141,6 +128,60 @@ public class PaddleController : MonoBehaviour
         cooldownBound = 0.5f + chargeTime / 4;
         cooldown = 0f;
         growingOrb = false;
+    }
+
+    public void SetHealthBar(GameObject healthBar)
+    {
+        this.healthBar = healthBar;
+    }
+
+    public void ResetPaddle()
+    {
+        gameObject.SetActive(true);
+        transform.position = new Vector3(playerID == 1 ? 15f : -15f, 0f);
+        ResetHealth();
+        projectileOrb = null;
+        chargeTime = 0f;
+        startTime = 0f;
+        endTime = 0f;
+        cooldown = 0.5f;
+        cooldownBound = 0.5f;
+        growingOrb = false;
+    }
+
+    private void ResetHealth()
+    {
+        health = fullHealth;
+        healthBar.GetComponent<Image>().fillAmount = 1f;
+    }
+
+    void SetLights()
+    {
+        SetLightsColour(playerColour);
+        healthBar.GetComponent<Image>().color = playerColour;
+        //Color.RGBToHSV(playerColour, out playerHue, out playerSaturation, out playerValue);
+
+        //lightsChargeGradient = new Gradient();
+        //GradientColorKey[] colourKeys = new GradientColorKey[6];
+        //GradientAlphaKey[] alphaKeys = new GradientAlphaKey[2];
+        //colourKeys[0].color = Color.white;
+        //colourKeys[0].time = 0f;
+        //colourKeys[1].color = Color.HSVToRGB(playerHue, playerSaturation / 2, playerValue);
+        //colourKeys[1].time = 0.489f;
+        //colourKeys[2].color = playerColour;
+        //colourKeys[2].time = 0/49f;
+        //colourKeys[3].color = Color.white;
+        //colourKeys[3].time = 0.5f;
+        //colourKeys[4].color = Color.HSVToRGB(playerHue, playerSaturation / 2, playerValue);
+        //colourKeys[4].time = 0.989f;
+        //colourKeys[5].color = playerColour;
+        //colourKeys[5].time = 0.99f;
+        //alphaKeys[0].alpha = 1f;
+        //alphaKeys[0].time = 0f;
+        //alphaKeys[1].alpha = 1f;
+        //alphaKeys[1].time = 1f;
+        //lightsChargeGradient.SetKeys(colourKeys, alphaKeys);    
+
     }
 
     void SetLightsColour(Color colour)
