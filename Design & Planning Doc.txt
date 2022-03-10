@@ -14,7 +14,7 @@ Dev Plan:
       Gravity - DONE
       Dynamic scaling of volume and mass - DONE
       Combine on collision - DONE
-      Explode at a critical mass (10)
+      Explode at a critical mass (10) - DONE
       Orb ownership?
   Set up basic game - IN PROGRESS
     Instantiate two paddles and an orb in the middle - DONE
