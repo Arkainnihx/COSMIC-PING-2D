@@ -6,6 +6,7 @@ public class OrbSimulationController : MonoBehaviour
 {
     public GameObject orbPrefab;
     public float gravityCoefficient;
+    public float explosionForceCoefficient;
     public List<GameObject> orbList;
 
     private List<(GameObject, GameObject)> orbCollsionList;
@@ -92,6 +93,18 @@ public class OrbSimulationController : MonoBehaviour
                 forceToApply += (gravityCoefficient * rb1.mass * rb2.mass * (position2 - position1)) / Mathf.Pow(Vector3.Distance(position2, position1), 3);
             }
             orbToApplyForceTo.GetComponent<Rigidbody>().AddForce(forceToApply);
+        }
+    }
+
+    public void ApplyExplosionForceToOrbs(GameObject explodingOrb)
+    {
+        float mass = explodingOrb.GetComponent<Rigidbody>().mass;
+        Vector3 position = explodingOrb.transform.position;
+        orbList.Remove(explodingOrb);
+        Destroy(explodingOrb);
+        foreach (GameObject orb in orbList)
+        {
+            orb.GetComponent<Rigidbody>().AddExplosionForce(explosionForceCoefficient * Mathf.Pow(mass, 2), position, mass * 5f);
         }
     }
 

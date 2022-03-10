@@ -9,7 +9,8 @@ public class OrbController : MonoBehaviour
 
     private Vector3 bounceDirection;
     private bool paddleBounceToResolve = false;
-    private float massIncrement = 0.001f;
+    private float massIncrement = 0.003f;
+    private float critialMass = 10f;
 
     private void FixedUpdate()
     {
@@ -18,6 +19,10 @@ public class OrbController : MonoBehaviour
             float speed = GetComponent<Rigidbody>().velocity.magnitude;
             GetComponent<Rigidbody>().velocity = speed * bounceDirection;
             paddleBounceToResolve = false;
+        }
+        if (GetComponent<Rigidbody>().mass > critialMass)
+        {
+            StartCoroutine(GoingCritialMass());
         }
     }
 
@@ -47,5 +52,16 @@ public class OrbController : MonoBehaviour
 
         GetComponentInChildren<Light>().range = 3 + (10 * mass);
         GetComponentInChildren<Light>().intensity = 1 + (4 * mass);
+    }
+
+    IEnumerator GoingCritialMass()
+    {
+        yield return new WaitForSeconds(3f);
+        Explode();
+    }
+
+    void Explode()
+    {
+        GetComponentInParent<OrbSimulationController>().ApplyExplosionForceToOrbs(gameObject);
     }
 }

@@ -25,13 +25,15 @@ Dev Plan:
       Basic functionality - DONE
       Force scales with mass - DONE
       BUG: paddle cannot shoot if charging orb is deleted before releasing the charge - FIXED
-      Variable cooldown between shots - IN PROGRESS
+      Variable cooldown between shots - PAUSED
         Code implementation - DONE
         Diegetic light-based UI - CAN'T GET WORKING; RETIRING FOR NOW
     Health system - DONE
       Code implementation - DONE
       UI health bars - DONE
     End-of-game screen - DONE
+  Build seems to be running slower than in Editor
+    Build FPS counter - DONE
   Lighting
     Orbs as main light sources
     Bigger is brighter - DONE
