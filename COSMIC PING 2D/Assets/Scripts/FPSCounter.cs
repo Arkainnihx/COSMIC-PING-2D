@@ -8,7 +8,7 @@ public class FPSCounter : MonoBehaviour
     public Text fpsText;
 
     private int framesSinceLastSecond;
-    private float thisSecond;
+    private float thisSecond = 0f;
 
     // Start is called before the first frame update
     void Start()

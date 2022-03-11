@@ -674,7 +674,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   orbPrefab: {fileID: 5246412254300636939, guid: 99ae4d42e35a86648811d106f2288143, type: 3}
   gravityCoefficient: 20
-  explosionForceCoefficient: 5
+  explosionForceCoefficient: 2
   orbList: []
 --- !u!114 &959724440
 MonoBehaviour:

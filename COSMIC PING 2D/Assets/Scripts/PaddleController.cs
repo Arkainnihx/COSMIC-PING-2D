@@ -19,8 +19,6 @@ public class PaddleController : MonoBehaviour
 
     private GameObject projectileOrb;
     private float projectileOrbFloatRange = 0.7f;
-    private float startTime = 0f;
-    private float endTime = 0f;
     private float cooldown = 0.5f;
     private float cooldownBound = 0.5f;
     private bool growingOrb = false;
@@ -35,7 +33,6 @@ public class PaddleController : MonoBehaviour
     void Start()
     {
         health = fullHealth;
-        movementSpeed = 0.1f;
         lights = lights = transform.GetChild(2).GetComponentsInChildren<Light>();
         SetLights();
     }
@@ -43,14 +40,36 @@ public class PaddleController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
+    }
+
+    void FixedUpdate()
+    {
         // Controls player input based on playerID
         transform.Translate(new Vector3(0, Input.GetAxis($"P{playerID} Move") * movementSpeed));
         // Keeps paddles within play area
         transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, -9.5f, 9.5f));
-
+        if (Input.GetAxisRaw($"P{playerID} Fire") == 1)
+        {
+            if (cooldown >= cooldownBound)
+            {
+                if (!growingOrb)
+                {
+                    CreateProjectileOrb();
+                }
+                else
+                {
+                    ChargeProjectileOrb();
+                }
+            }
+        }
+        else if (growingOrb)
+        {
+            ShootProjectileOrb();
+        }
         if (cooldown < cooldownBound)
         {
-            cooldown += Time.deltaTime;
+            cooldown += Time.fixedDeltaTime;
             //if (cooldown / cooldownBound < 0.5f)
             //{
             //    SetBackLightsColour(lightsChargeGradient.Evaluate(cooldown / cooldownBound));
@@ -60,28 +79,6 @@ public class PaddleController : MonoBehaviour
             //    SetFrontLightsColour(lightsChargeGradient.Evaluate(cooldown / cooldownBound));
             //    Debug.Log($"Front: {cooldown / cooldownBound}");
             //}
-        }
-    }
-
-    void FixedUpdate()
-    {
-        if (Input.GetAxisRaw($"P{playerID} Fire") == 1)
-        {
-            if (cooldown >= cooldownBound)
-            {
-                if (!growingOrb)
-                {
-                    startTime = CreateProjectileOrb();
-                }
-                else
-                {
-                    ChargeProjectileOrb(startTime);
-                }
-            }
-        }
-        else if (growingOrb)
-        {
-            ShootProjectileOrb();
         }
     }
 
@@ -95,29 +92,25 @@ public class PaddleController : MonoBehaviour
         }
     }
 
-    float CreateProjectileOrb()
+    void CreateProjectileOrb()
     {
         projectileOrb = GetComponentInParent<OrbSimulationController>().CreateOrb(0f);
         projectileOrb.transform.SetParent(transform);
         projectileOrb.transform.rotation = Quaternion.LookRotation(Vector3.forward, Vector3.up);
         projectileOrb.transform.localPosition = projectileOrbFloatRange * Vector3.forward;
         growingOrb = true;
-
-        return Time.time;
     }
 
-    float ChargeProjectileOrb(float startTime)
+    void ChargeProjectileOrb()
     {
         if (projectileOrb != null)
         {
             if (projectileOrb.GetComponent<Rigidbody>().mass < projectileMaxMass)
             {
-                endTime = Time.time;
                 projectileOrb.GetComponent<OrbController>().IncrementMass();
             }
             projectileOrb.transform.localPosition = projectileOrbFloatRange * Vector3.forward;
         }
-        return endTime - startTime;
     }
 
     void ShootProjectileOrb()
@@ -126,8 +119,11 @@ public class PaddleController : MonoBehaviour
         {
             projectileOrb.transform.SetParent(transform.parent);
             projectileOrb.GetComponent<Rigidbody>().AddForce((projectileForceMinimum + (projectileOrb.GetComponent<Rigidbody>().mass * projectileForceCoefficient)) * Vector3.Normalize(projectileOrb.transform.position - transform.position));
+            cooldownBound = 0.5f + projectileOrb.GetComponent<Rigidbody>().mass / 4;
+        } else
+        {
+            cooldownBound = 0.5f;
         }
-        cooldownBound = 0.5f + projectileOrb.GetComponent<Rigidbody>().mass / 4;
         cooldown = 0f;
         growingOrb = false;
     }
@@ -143,8 +139,6 @@ public class PaddleController : MonoBehaviour
         transform.position = new Vector3(playerID == 1 ? 15f : -15f, 0f);
         ResetHealth();
         projectileOrb = null;
-        startTime = 0f;
-        endTime = 0f;
         cooldown = 0.5f;
         cooldownBound = 0.5f;
         growingOrb = false;

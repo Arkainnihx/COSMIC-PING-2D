@@ -65,8 +65,10 @@ public class MatchController : MonoBehaviour
         gameOverScreen.SetActive(false);
         GetComponent<OrbSimulationController>().ResetOrbSimulation();
         foreach (GameObject paddle in paddleArray) paddle.GetComponent<PaddleController>().ResetPaddle();
+
         // Create initial energy orb
-        GetComponent<OrbSimulationController>().CreateOrb(1f);
+        //GetComponent<OrbSimulationController>().CreateOrb(1f);
+        GetComponent<OrbSimulationController>().ChaosMode();
     }
 
     public void Quit()

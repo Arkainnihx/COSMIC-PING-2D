@@ -16,7 +16,6 @@ public class OrbSimulationController : MonoBehaviour
         orbList = new List<GameObject>();
         orbCollsionList = new List<(GameObject, GameObject)>();
         //SetUpOrbGravityTest();
-        //RunNewOrbGravityTest();
     }
 
     //void SetUpOrbGravityTest()
@@ -28,37 +27,37 @@ public class OrbSimulationController : MonoBehaviour
     //    CreateOrb(Random.Range(0.01f, 2f), new Vector3(-orbDistance, -orbDistance), Random.insideUnitCircle);
     //}
 
-    //void RunNewOrbGravityTest()
-    //{
-    //    float positionRange = 8f;
-    //    float velocityCoefficient = 4f;
-    //    float maxMass = 0.5f;
-    //    StartCoroutine(CreateRandomTestOrbs(positionRange, velocityCoefficient, maxMass));
-    //}
-
-    //IEnumerator CreateRandomTestOrbs(float positionRange, float velocityCoefficient, float maxMass)
-    //{
-    //    float nextActionTime = 0.25f;
-    //    while (Time.time < 120f)
-    //    {
-    //        if (Time.time > nextActionTime)
-    //        {
-    //            nextActionTime += 0.2f;
-    //            CreateOrb(Random.Range(0.01f, maxMass), positionRange * Random.insideUnitCircle, velocityCoefficient * Random.insideUnitCircle);
-    //        }
-    //        yield return null;
-    //    }
-    //}
-
-    // Update is called once per frame
-    void Update()
+    public void ChaosMode()
     {
-        if (Input.GetKeyUp(KeyCode.B))
+        float positionRange = 0f;
+        float velocityCoefficient = 4f;
+        float maxMass = 0.8f;
+        StartCoroutine(CreateRandomOrbs(positionRange, velocityCoefficient, maxMass));
+    }
+
+    IEnumerator CreateRandomOrbs(float positionRange, float velocityCoefficient, float maxMass)
+    {
+        float nextActionTime = 1f;
+        while (Time.time < 120f)
         {
-            bool value = transform.Find("Barriers").gameObject.activeInHierarchy;
-            transform.Find("Barriers").gameObject.SetActive(!value);
+            if (Time.time > nextActionTime)
+            {
+                nextActionTime += 1f;
+                CreateOrb(Random.Range(0.1f, maxMass), positionRange * Random.insideUnitCircle, velocityCoefficient * Random.insideUnitCircle);
+            }
+            yield return null;
         }
     }
+
+    // Update is called once per frame
+    //void Update()
+    //{
+    //    if (Input.GetKeyUp(KeyCode.B))
+    //    {
+    //        bool value = transform.Find("Barriers").gameObject.activeInHierarchy;
+    //        transform.Find("Barriers").gameObject.SetActive(!value);
+    //    }
+    //}
 
     private void FixedUpdate()
     {

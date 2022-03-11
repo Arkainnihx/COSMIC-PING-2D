@@ -5,7 +5,7 @@ Game Outline:
   "Pong with orbital gravity"
 
 Dev Plan:
-  Create prefabs
+  Create prefabs - DONE
     Paddle - DONE
       Which player's paddle? - DONE
       Move up and down - DONE
@@ -32,8 +32,9 @@ Dev Plan:
       Code implementation - DONE
       UI health bars - DONE
     End-of-game screen - DONE
-  Build seems to be running slower than in Editor
-    Build FPS counter - DONE
+    Build seems to be running slower than in Editor - DONE
+      Build FPS counter - DONE
+      Code refactoring - DONE
   Lighting
     Orbs as main light sources
     Bigger is brighter - DONE

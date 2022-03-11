@@ -56,6 +56,7 @@ public class OrbController : MonoBehaviour
 
     IEnumerator GoingCritialMass()
     {
+        GetComponentInChildren<Light>().color = Color.cyan;
         yield return new WaitForSeconds(3f);
         Explode();
     }
