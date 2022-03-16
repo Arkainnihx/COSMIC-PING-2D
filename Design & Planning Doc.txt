@@ -43,6 +43,8 @@ Dev Plan:
       Orb colours
         Change colour as they get bigger?
   Main menu
+    Design UI
+    Code implementation
 Stretch Goals:
   Code Refactoring
   Pause menu
