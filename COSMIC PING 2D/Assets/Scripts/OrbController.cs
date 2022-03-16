@@ -6,11 +6,12 @@ public class OrbController : MonoBehaviour
 {
 
     public float volumeCoefficient;
+    public bool toExplode = false;
+    public static float massIncrement = 0.001f;
 
     private Vector3 bounceDirection;
     private bool paddleBounceToResolve = false;
-    private float massIncrement = 0.003f;
-    private float critialMass = 10f;
+    private static float critialMass = 10f;
 
     private void FixedUpdate()
     {
@@ -31,7 +32,7 @@ public class OrbController : MonoBehaviour
         switch (collision.gameObject.tag)
         {
             case "Orb":
-                GetComponentInParent<OrbSimulationController>().HandleHalfAnOrbCollision(gameObject, collision.gameObject);
+                GetComponentInParent<OrbSimulationController>().RegisterHalfCollision(gameObject, collision.gameObject);
                 break;
             case "Player":
                 bounceDirection = Vector3.Normalize(transform.position - collision.transform.Find("Bounce Angle Point").position);
@@ -50,19 +51,13 @@ public class OrbController : MonoBehaviour
         GetComponent<Rigidbody>().mass = mass;
         transform.localScale = volumeCoefficient * Mathf.Pow(mass, 1f / 3f) * Vector3.one;
 
-        GetComponentInChildren<Light>().range = 3 + (10 * mass);
-        GetComponentInChildren<Light>().intensity = 1 + (4 * mass);
+        GetComponentInChildren<Light>().intensity = 0.1f + Mathf.Pow(mass, 1.5f);
     }
 
     IEnumerator GoingCritialMass()
     {
         GetComponentInChildren<Light>().color = Color.cyan;
         yield return new WaitForSeconds(3f);
-        Explode();
-    }
-
-    void Explode()
-    {
-        GetComponentInParent<OrbSimulationController>().ApplyExplosionForceToOrbs(gameObject);
+        toExplode = true;
     }
 }

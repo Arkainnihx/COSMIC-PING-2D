@@ -16,11 +16,24 @@ public class MatchController : MonoBehaviour
     void Start()
     {
         winArray = new int[totalPlayers];
-        gameOverScreen = GameObject.Find("Game Over Menu");
+        FindGameOverScreen();
         InitalGameSetup();
         Rematch();
     }
 
+    void FindGameOverScreen()
+    {
+        RectTransform[] uiArray = Resources.FindObjectsOfTypeAll<RectTransform>();
+        foreach (RectTransform uiElement in uiArray)
+        {
+            if (uiElement.gameObject.name == "Game Over Menu")
+            {
+                gameOverScreen = uiElement.gameObject;
+                break;
+            }
+        }
+        gameOverScreen.SetActive(true);
+    }
     void InitalGameSetup()
     {
         // Create and position two paddles, assign player IDs
@@ -39,6 +52,7 @@ public class MatchController : MonoBehaviour
 
     public void GameOver(GameObject losingPaddle)
     {
+        StateController.currentState = State.GameOver;
         int winnerArrayIndex = UpdateWinCount(losingPaddle);
         SetAndShowGameOverScreen(winnerArrayIndex, paddleArray[winnerArrayIndex].GetComponent<PaddleController>().playerColour);
         losingPaddle.SetActive(false);
@@ -63,6 +77,7 @@ public class MatchController : MonoBehaviour
     public void Rematch()
     {
         gameOverScreen.SetActive(false);
+        StateController.currentState = State.PlayingMatch;
         GetComponent<OrbSimulationController>().ResetOrbSimulation();
         foreach (GameObject paddle in paddleArray) paddle.GetComponent<PaddleController>().ResetPaddle();
 
