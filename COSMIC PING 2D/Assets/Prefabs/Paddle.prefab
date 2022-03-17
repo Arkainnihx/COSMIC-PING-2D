@@ -460,10 +460,10 @@ MonoBehaviour:
   playerID: 0
   playerColour: {r: 0, g: 0, b: 0, a: 0}
   movementSpeed: 0.1
-  projectileForceCoefficient: 200
-  projectileForceMinimum: 100
+  projectileForceCoefficient: 500
+  projectileForceMinimum: 80
   projectileMaxMass: 1
-  fullHealth: 20
+  fullHealth: 10
 --- !u!1 &4119918885480319786
 GameObject:
   m_ObjectHideFlags: 0

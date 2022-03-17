@@ -42,10 +42,11 @@ Dev Plan:
       Player colours - DONE
       Orb colours
         Change colour as they get bigger?
-  Main menu
-    Design UI
-    Code implementation
+  Main menu - DONE
+    Design UI - DONE
+    Code implementation - DONE
 Stretch Goals:
+  Flashy Title
   Code Refactoring
   Pause menu
   Sound

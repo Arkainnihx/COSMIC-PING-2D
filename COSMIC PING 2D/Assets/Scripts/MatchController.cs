@@ -15,8 +15,12 @@ public class MatchController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        winArray = new int[totalPlayers];
         FindGameOverScreen();
+    }
+
+    public void StartGame()
+    {
+        winArray = new int[totalPlayers];
         InitalGameSetup();
         Rematch();
     }
@@ -32,10 +36,10 @@ public class MatchController : MonoBehaviour
                 break;
             }
         }
-        gameOverScreen.SetActive(true);
     }
     void InitalGameSetup()
     {
+        gameOverScreen.SetActive(true);
         // Create and position two paddles, assign player IDs
         paddleArray = new GameObject[totalPlayers];
         paddleArray[0] = Instantiate(paddlePrefab, new Vector3(15f, 0f), Quaternion.Euler(0, -90f, 0f), transform);
@@ -48,6 +52,7 @@ public class MatchController : MonoBehaviour
         paddleArray[1].GetComponent<PaddleController>().playerColour = Color.red;
         paddleArray[1].GetComponent<PaddleController>().SetHealthBar(GameObject.Find("P2 Health Bar"));
         gameOverScreen.transform.Find("Score Text").Find("P2 Score").GetComponent<Text>().color = paddleArray[1].GetComponent<PaddleController>().playerColour;
+        gameOverScreen.SetActive(false);
     }
 
     public void GameOver(GameObject losingPaddle)
@@ -82,12 +87,21 @@ public class MatchController : MonoBehaviour
         foreach (GameObject paddle in paddleArray) paddle.GetComponent<PaddleController>().ResetPaddle();
 
         // Create initial energy orb
-        //GetComponent<OrbSimulationController>().CreateOrb(1f);
+        //GetComponent<OrbSimulationController>().CreateOrb(1f, Vector3.zero, 3f * Random.insideUnitCircle);
         GetComponent<OrbSimulationController>().ChaosMode();
     }
 
-    public void Quit()
+    public void ReturnToMenu()
     {
-        Application.Quit();
+        GetComponent<OrbSimulationController>().ResetOrbSimulation();
+        foreach (GameObject paddle in paddleArray)
+        {
+            Destroy(paddle);
+        }
+        paddleArray = null;
+        winArray = null;
+        GameObject.Find("P1 Health Bar").GetComponent<Image>().fillAmount = 0f;
+        GameObject.Find("P2 Health Bar").GetComponent<Image>().fillAmount = 0f;
+        gameOverScreen.SetActive(false);
     }
 }
