@@ -18,13 +18,6 @@ public class MatchController : MonoBehaviour
         FindGameOverScreen();
     }
 
-    public void StartGame()
-    {
-        winArray = new int[totalPlayers];
-        InitalGameSetup();
-        Rematch();
-    }
-
     void FindGameOverScreen()
     {
         RectTransform[] uiArray = Resources.FindObjectsOfTypeAll<RectTransform>();
@@ -37,6 +30,14 @@ public class MatchController : MonoBehaviour
             }
         }
     }
+
+    public void StartGame()
+    {
+        winArray = new int[totalPlayers];
+        InitalGameSetup();
+        Rematch();
+    }
+
     void InitalGameSetup()
     {
         gameOverScreen.SetActive(true);
@@ -55,21 +56,24 @@ public class MatchController : MonoBehaviour
         gameOverScreen.SetActive(false);
     }
 
+    public void Rematch()
+    {
+        gameOverScreen.SetActive(false);
+        StateController.currentState = State.PlayingMatch;
+        GetComponent<OrbSimulationController>().ResetOrbSimulation();
+        foreach (GameObject paddle in paddleArray) paddle.GetComponent<PaddleController>().ResetPaddle();
+
+        // Create initial energy orb
+        GetComponent<OrbSimulationController>().SmoothCreateOrb(1f, Vector3.zero, 3f * Random.insideUnitCircle);
+        //GetComponent<OrbSimulationController>().ChaosMode();
+    }
+
     public void GameOver(GameObject losingPaddle)
     {
         StateController.currentState = State.GameOver;
         int winnerArrayIndex = UpdateWinCount(losingPaddle);
         SetAndShowGameOverScreen(winnerArrayIndex, paddleArray[winnerArrayIndex].GetComponent<PaddleController>().playerColour);
         losingPaddle.SetActive(false);
-    }
-
-    void SetAndShowGameOverScreen(int winnerArrayIndex, Color winnerColour)
-    {
-        gameOverScreen.transform.Find("Winner Text").gameObject.GetComponent<Text>().text = $"P{winnerArrayIndex + 1} WINS!";
-        gameOverScreen.transform.Find("Winner Text").gameObject.GetComponent<Text>().color = winnerColour;
-        gameOverScreen.transform.Find("Score Text").Find("P1 Score").gameObject.GetComponent<Text>().text = winArray[0].ToString();
-        gameOverScreen.transform.Find("Score Text").Find("P2 Score").gameObject.GetComponent<Text>().text = winArray[1].ToString();
-        gameOverScreen.SetActive(true);
     }
 
     int UpdateWinCount(GameObject losingPaddle)
@@ -79,16 +83,13 @@ public class MatchController : MonoBehaviour
         return winnerArrayIndex;
     }
 
-    public void Rematch()
+    void SetAndShowGameOverScreen(int winnerArrayIndex, Color winnerColour)
     {
-        gameOverScreen.SetActive(false);
-        StateController.currentState = State.PlayingMatch;
-        GetComponent<OrbSimulationController>().ResetOrbSimulation();
-        foreach (GameObject paddle in paddleArray) paddle.GetComponent<PaddleController>().ResetPaddle();
-
-        // Create initial energy orb
-        //GetComponent<OrbSimulationController>().CreateOrb(1f, Vector3.zero, 3f * Random.insideUnitCircle);
-        GetComponent<OrbSimulationController>().ChaosMode();
+        gameOverScreen.transform.Find("Winner Text").gameObject.GetComponent<Text>().text = $"P{winnerArrayIndex + 1} WINS!";
+        gameOverScreen.transform.Find("Winner Text").gameObject.GetComponent<Text>().color = winnerColour;
+        gameOverScreen.transform.Find("Score Text").Find("P1 Score").gameObject.GetComponent<Text>().text = winArray[0].ToString();
+        gameOverScreen.transform.Find("Score Text").Find("P2 Score").gameObject.GetComponent<Text>().text = winArray[1].ToString();
+        gameOverScreen.SetActive(true);
     }
 
     public void ReturnToMenu()

@@ -11,65 +11,53 @@ public class OrbSimulationController : MonoBehaviour
     public List<(GameObject thisOrb, GameObject thatOrb)> orbCollisionList;
 
     private float orbSpawnInterval = 1f;
+
     // Start is called before the first frame update
     void Start()
     {
         orbList = new List<GameObject>();
         orbCollisionList = new List<(GameObject, GameObject)>();
-        //SetUpOrbGravityTest();
     }
 
-    //void SetUpOrbGravityTest()
-    //{
-    //    float orbDistance = 5f;
-    //    CreateOrb(Random.Range(0.01f, 2f), new Vector3(orbDistance, orbDistance), Random.insideUnitCircle);
-    //    CreateOrb(Random.Range(0.01f, 2f), new Vector3(orbDistance, -orbDistance), Random.insideUnitCircle);
-    //    CreateOrb(Random.Range(0.01f, 2f), new Vector3(-orbDistance, orbDistance), Random.insideUnitCircle);
-    //    CreateOrb(Random.Range(0.01f, 2f), new Vector3(-orbDistance, -orbDistance), Random.insideUnitCircle);
-    //}
-
-    public void ChaosMode()
+    void FixedUpdate()
     {
-        float positionRange = 5f;
-        float velocityCoefficient = 3f;
-        float maxMass = 0.8f;
-        StartCoroutine(CreateRandomOrbs(positionRange, velocityCoefficient, maxMass));
-    }
-
-    IEnumerator CreateRandomOrbs(float positionRange, float velocityCoefficient, float maxMass)
-    {
-        while (StateController.currentState == State.PlayingMatch)
-        {
-            yield return new WaitForSeconds(orbSpawnInterval);
-            StartCoroutine(SmoothCreateOrb(Random.Range(0.1f, maxMass), positionRange * Random.insideUnitCircle, velocityCoefficient * Random.insideUnitCircle));
-        }
-    }
-
-    // Update is called once per frame
-    //void Update()
-    //{
-    //    if (Input.GetKeyUp(KeyCode.B))
-    //    {
-    //        bool value = transform.Find("Barriers").gameObject.activeInHierarchy;
-    //        transform.Find("Barriers").gameObject.SetActive(!value);
-    //    }
-    //}
-
-    private void FixedUpdate()
-    {
-        ResolveCollisions();
+        ResolveOrbCollisions();
         ApplyGraviticForcesToOrbs();
     }
 
-    public void ResetOrbSimulation()
+    void ResolveOrbCollisions()
     {
-        StopAllCoroutines();
-        orbCollisionList.Clear();
-        foreach (GameObject orb in orbList)
+        if (orbCollisionList.Count > 1)
         {
-            Destroy(orb);
+            for (int collisionIndex = orbCollisionList.Count - 1; collisionIndex >= 0; collisionIndex--)
+            {
+                orbCollisionList.RemoveAt(collisionIndex);
+                CombineOrbs(orbCollisionList[collisionIndex].thisOrb, orbCollisionList[collisionIndex].thatOrb);
+            }
         }
-        orbList.Clear();
+    }
+
+    void CombineOrbs(GameObject orb1, GameObject orb2)
+    {
+        Rigidbody rb1 = orb1.GetComponent<Rigidbody>();
+        Rigidbody rb2 = orb2.GetComponent<Rigidbody>();
+        float newMass = rb1.mass + rb2.mass;
+        Vector3 momentum = rb1.mass * rb1.velocity + rb2.mass * rb2.velocity;
+        Vector3 newVelocity = momentum / newMass;
+        if (rb1.mass > rb2.mass)
+        {
+            orb1.GetComponent<OrbController>().SetProportionalValuesUsingMass(newMass);
+            rb1.velocity = newVelocity;
+            orbList.Remove(orb2);
+            Destroy(orb2);
+        }
+        else
+        {
+            orb2.GetComponent<OrbController>().SetProportionalValuesUsingMass(newMass);
+            rb2.velocity = newVelocity;
+            orbList.Remove(orb1);
+            Destroy(orb1);
+        }
     }
 
     void ApplyGraviticForcesToOrbs()
@@ -108,6 +96,17 @@ public class OrbSimulationController : MonoBehaviour
         {
             orb.GetComponent<Rigidbody>().AddExplosionForce(explosionForceCoefficient * Mathf.Pow(mass, 2f), position, mass * 8f);
         }
+    }
+
+    public void ResetOrbSimulation()
+    {
+        StopAllCoroutines();
+        orbCollisionList.Clear();
+        foreach (GameObject orb in orbList)
+        {
+            Destroy(orb);
+        }
+        orbList.Clear();
     }
 
     public IEnumerator SmoothCreateOrb(float mass, Vector3 position, Vector3 velocity)
@@ -157,45 +156,9 @@ public class OrbSimulationController : MonoBehaviour
         }
     }
 
-    void ResolveCollisions()
-    {
-        if (orbCollisionList.Count > 1)
-        {
-            for (int collisionIndex = orbCollisionList.Count - 1; collisionIndex >= 0; collisionIndex--)
-            {
-                GameObject thisOrb = orbCollisionList[collisionIndex].thisOrb;
-                GameObject thatOrb = orbCollisionList[collisionIndex].thatOrb;
-                orbCollisionList.RemoveAt(collisionIndex);
-                CombineOrbs(thisOrb, thatOrb);
-            }
-        }
-    }
-
-    void CombineOrbs(GameObject orb1, GameObject orb2)
-    {
-        Rigidbody rb1 = orb1.GetComponent<Rigidbody>();
-        Rigidbody rb2 = orb2.GetComponent<Rigidbody>();
-        float newMass = rb1.mass + rb2.mass;
-        Vector3 momentum = rb1.mass * rb1.velocity + rb2.mass * rb2.velocity;
-        Vector3 newVelocity = momentum / newMass;
-        if (rb1.mass > rb2.mass)
-        {
-            orb1.GetComponent<OrbController>().SetProportionalValuesUsingMass(newMass);
-            rb1.velocity = newVelocity;
-            orbList.Remove(orb2);
-            Destroy(orb2);
-        }
-        else
-        {
-            orb2.GetComponent<OrbController>().SetProportionalValuesUsingMass(newMass);
-            rb2.velocity = newVelocity;
-            orbList.Remove(orb1);
-            Destroy(orb1);
-        }
-    }
-
     private void OnTriggerExit(Collider other)
     {
+        // If an orb exits the Playing Field trigger collider, destroy it and, depending on which side it left, deal damage to the appropriate player
         if (other.gameObject.tag == "Orb")
         {
             if (StateController.currentState == State.PlayingMatch)
@@ -211,6 +174,24 @@ public class OrbSimulationController : MonoBehaviour
             }
             orbList.Remove(other.gameObject);
             Destroy(other.gameObject);
+        }
+    }
+
+    // Alternative game mode, regularly spawns random orbs
+    public void ChaosMode()
+    {
+        float positionRange = 5f;
+        float velocityCoefficient = 3f;
+        float maxMass = 0.8f;
+        StartCoroutine(CreateRandomOrbs(positionRange, velocityCoefficient, maxMass));
+    }
+
+    IEnumerator CreateRandomOrbs(float positionRange, float velocityCoefficient, float maxMass)
+    {
+        while (StateController.currentState == State.PlayingMatch)
+        {
+            yield return new WaitForSeconds(orbSpawnInterval);
+            StartCoroutine(SmoothCreateOrb(Random.Range(0.1f, maxMass), positionRange * Random.insideUnitCircle, velocityCoefficient * Random.insideUnitCircle));
         }
     }
 

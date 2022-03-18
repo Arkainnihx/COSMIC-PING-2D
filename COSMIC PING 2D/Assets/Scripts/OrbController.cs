@@ -15,20 +15,22 @@ public class OrbController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        // Controls settings the orb's new velocity after bouncing off a paddle
         if (paddleBounceToResolve)
         {
             float speed = GetComponent<Rigidbody>().velocity.magnitude;
             GetComponent<Rigidbody>().velocity = speed * bounceDirection;
             paddleBounceToResolve = false;
         }
-        if (GetComponent<Rigidbody>().mass > critialMass)
-        {
-            StartCoroutine(GoingCritialMass());
-        }
+
+        // If orb has reached critical mass, set to explode
+        if (GetComponent<Rigidbody>().mass > critialMass) StartCoroutine(GoingCritialMass());
     }
 
     void OnCollisionEnter(Collision collision)
     {
+        // If orb has collided with another orb, register this half of the collision with the simulation controller
+        // If orb has collided with a paddle, set the direction for the bounce force to be applied along, to be resolved in FixedUpdate
         switch (collision.gameObject.tag)
         {
             case "Orb":
@@ -46,6 +48,7 @@ public class OrbController : MonoBehaviour
         SetProportionalValuesUsingMass(gameObject.GetComponent<Rigidbody>().mass + massIncrement);
     }
 
+    // Set mass, and size & brightness relative to mass
     public void SetProportionalValuesUsingMass(float mass)
     {
         GetComponent<Rigidbody>().mass = mass;
