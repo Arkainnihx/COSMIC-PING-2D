@@ -64,7 +64,7 @@ public class MatchController : MonoBehaviour
         foreach (GameObject paddle in paddleArray) paddle.GetComponent<PaddleController>().ResetPaddle();
 
         // Create initial energy orb
-        GetComponent<OrbSimulationController>().SmoothCreateOrb(1f, Vector3.zero, 3f * Random.insideUnitCircle);
+        StartCoroutine(GetComponent<OrbSimulationController>().SmoothCreateOrb(1f, Vector3.zero, 3f * Random.insideUnitCircle));
         //GetComponent<OrbSimulationController>().ChaosMode();
     }
 
